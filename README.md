@@ -170,3 +170,6 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 
        curl -v "http://$INGRESS_HOST"
 
+---
+
+This is not an official Google project.
