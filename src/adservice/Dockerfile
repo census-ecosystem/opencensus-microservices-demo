@@ -12,5 +12,5 @@ RUN ./gradlew downloadRepos
 
 COPY . .
 RUN ./gradlew installDist
-EXPOSE 9555
+EXPOSE 9555 9090
 ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]

@@ -19,12 +19,14 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"time"
 
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"github.com/google/uuid"
+	"go.opencensus.io/exporter/prometheus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -51,9 +53,15 @@ type checkoutService struct {
 	paymentSvcAddr        string
 }
 
+var stackdriverExporter view.Exporter
+
 func main() {
 	go initTracing()
 	go initProfiling("checkoutservice", "1.0.0")
+	go func () {
+		initTracing()
+		initStats()
+	}()
 
 	port := listenPort
 	if os.Getenv("PORT") != "" {
@@ -81,12 +89,48 @@ func main() {
 	log.Fatal(srv.Serve(lis))
 }
 
-func initStats(exporter *stackdriver.Exporter) {
+func initPrometheusStatsExporter() *prometheus.Exporter {
+	exporter, err := prometheus.NewExporter(prometheus.Options{})
+
+	if err != nil {
+		log.Fatal("error registering prometheus exporter")
+		return nil
+	}
+
 	view.RegisterExporter(exporter)
-	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
-		log.Printf("Error registering default server views")
-	} else {
-		log.Printf("Registered default server views")
+	return exporter
+}
+func startPrometheusExporter(exporter *prometheus.Exporter) {
+	addr := ":9090"
+	log.Printf("starting prometheus server at %s", addr)
+	http.Handle("/metrics", exporter)
+	log.Fatal(http.ListenAndServe(addr, nil))
+}
+
+func initStackDriverStatsExporter() {
+	// Reuse stactdriver exporter for stats if one is already created for tracing.
+	if stackdriverExporter == nil {
+		var err error
+		stackdriverExporter, err = stackdriver.NewExporter(stackdriver.Options{})
+		if err != nil {
+			log.Print("error creating stackdriver exporter");
+			return
+		}
+	}
+	view.RegisterExporter(stackdriverExporter)
+}
+
+func initStats() {
+	log.Print("init stats")
+
+	initStackDriverStatsExporter()
+
+	// Start prometheus exporter as well
+	exporter := initPrometheusStatsExporter()
+	go startPrometheusExporter(exporter)
+
+	if err := view.Register(ocgrpc.DefaultClientViews...); err != nil {
+		log.Fatal("error registering default grpc client views")
 	}
 }
 
@@ -103,7 +147,7 @@ func initTracing() {
 			log.Print("registered stackdriver tracing")
 
 			// Register the views to collect server stats.
-			initStats(exporter)
+			stackdriverExporter = exporter
 			return
 		}
 		d := time.Second * 10 * time.Duration(i)

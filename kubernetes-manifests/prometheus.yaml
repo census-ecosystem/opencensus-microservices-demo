@@ -15,55 +15,49 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: adservice
+  name: prometheus
 spec:
   template:
     metadata:
       labels:
-        app: adservice
+        app: prometheus
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
-      - name: server
-        image: gcr.io/microservices-demo-app/adservice
+      - name: prometheus
+        image: gcr.io/microservices-demo-app/prometheus
         ports:
-        - containerPort: 9555
-          name: adservice
         - containerPort: 9090
-          name: metrics
-        env:
-        - name: PORT
-          value: "9555"
-        resources:
-          requests:
-            cpu: 200m
-            memory: 180Mi
-          limits:
-            cpu: 300m
-            memory: 300Mi
         readinessProbe:
+          periodSeconds: 5
           tcpSocket:
-            port: 9555
-          initialDelaySeconds: 5
-          periodSeconds: 10
+            port: 9090
         livenessProbe:
+          periodSeconds: 5
           tcpSocket:
-            port: 9555
-          initialDelaySeconds: 10
-          periodSeconds: 10
+            port: 9090
+        volumeMounts:
+        - mountPath: /data
+          name: prometheus-data
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 125m
+          requests:
+            cpu: 70m
+            memory: 200Mi
+      volumes:
+      - name: prometheus-data
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: adservice
+  name: prometheus
 spec:
   type: ClusterIP
   selector:
-    app: adservice
+    app: prometheus
   ports:
-  - name: grpc
-    port: 9555
-    targetPort: 9555
-  - name: metrics
+  - name: prometheus
     port: 9090
     targetPort: 9090
