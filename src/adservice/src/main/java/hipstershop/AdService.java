@@ -33,6 +33,7 @@ import io.opencensus.exporter.stats.prometheus.PrometheusStatsCollector;
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 import io.opencensus.exporter.stats.stackdriver.StackdriverStatsConfiguration;
 import io.opencensus.exporter.stats.stackdriver.StackdriverStatsExporter;
+import io.opencensus.exporter.trace.jaeger.JaegerTraceExporter;
 import io.opencensus.exporter.trace.stackdriver.StackdriverTraceConfiguration;
 import io.opencensus.exporter.trace.stackdriver.StackdriverTraceExporter;
 import io.opencensus.trace.AttributeValue;
@@ -234,6 +235,9 @@ public class AdService {
     // Register Prometheus exporters and export metrics to a Prometheus HTTPServer.
     PrometheusStatsCollector.createAndRegister();
     HTTPServer prometheusServer = new HTTPServer(9090, true);
+
+    // Register Jaeger Tracing.
+    JaegerTraceExporter.createAndRegister("http://jaeger:14268/api/traces", "adservice");
 
     // Start the RPC server. You shouldn't see any output from gRPC before this.
     logger.info("AdService starting.");

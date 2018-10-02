@@ -26,6 +26,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/exporter/prometheus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/plugin/ochttp"
@@ -140,6 +141,22 @@ func main() {
 	log.Fatal(http.ListenAndServe(addr+":"+srvPort, handler))
 }
 
+func initJaegerTracing(log logrus.FieldLogger) {
+
+	// Register the Jaeger exporter to be able to retrieve
+	// the collected spans.
+	exporter, err := jaeger.NewExporter(jaeger.Options{
+		Endpoint: "http://jaeger:14268",
+		Process: jaeger.Process{
+			ServiceName: "frontend",
+		},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	trace.RegisterExporter(exporter)
+}
+
 func initPrometheusStatsExporter(log logrus.FieldLogger) *prometheus.Exporter {
 	exporter, err := prometheus.NewExporter(prometheus.Options{})
 
@@ -189,6 +206,14 @@ func initStats(log logrus.FieldLogger) {
 }
 
 func initTracing(log logrus.FieldLogger) {
+	// This is a demo app with low QPS. trace.AlwaysSample() is used here
+	// to make sure traces are available of observation and analysis.
+	// In a production environment or high QPS setup please use
+	// trace.ProbabilitySampler set at the desired probability.
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+
+	initJaegerTracing(log)
+
 	// TODO(ahmetb) this method is duplicated in other microservices using Go
 	// since they are not sharing packages.
 	for i := 1; i <= 3; i++ {
@@ -198,10 +223,6 @@ func initTracing(log logrus.FieldLogger) {
 			log.Warnf("failed to initialize stackdriver exporter: %+v", err)
 		} else {
 			trace.RegisterExporter(exporter)
-			// This is demo app, hence AlwaysSample() is used to see the traces
-			// right away. Please use appropriate Sample function for your
-			// production code where QPS is high.
-			trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 			log.Info("registered stackdriver tracing")
 
 			stackdriverExporter = exporter

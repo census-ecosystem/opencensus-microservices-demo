@@ -25,6 +25,15 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:e95de5c830369d6592224de57a31cd87a2ba1cec2abaf050d06a63ee8f7babd8"
+  name = "git.apache.org/thrift.git"
+  packages = ["lib/go/thrift"]
+  pruneopts = "UT"
+  revision = "014f53f6582fbae8146ae291d471382016091a06"
+  source = "github.com/apache/thrift"
+
+[[projects]]
+  branch = "master"
   digest = "1:d6afaeed1502aa28e80a4ed0981d570ad91b2579193404256ce672ed0a609e0d"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
@@ -126,10 +135,12 @@
   revision = "418d78d0b9a7b7de3a6bbc8a23def624cc977bb2"
 
 [[projects]]
-  digest = "1:7e19562a97593621c5507262002c5440a3e1a7b0998a4d0af35461f96c46cd7f"
+  digest = "1:cf149db5969de96f9f830598993f3e5e08b1222308cd0b9f018db3f412a47775"
   name = "go.opencensus.io"
   packages = [
     ".",
+    "exporter/jaeger",
+    "exporter/jaeger/internal/gen-go/jaeger",
     "exporter/prometheus",
     "internal",
     "internal/tagencoding",
@@ -323,6 +334,7 @@
     "contrib.go.opencensus.io/exporter/stackdriver",
     "github.com/golang/protobuf/proto",
     "github.com/google/uuid",
+    "go.opencensus.io/exporter/jaeger",
     "go.opencensus.io/exporter/prometheus",
     "go.opencensus.io/plugin/ocgrpc",
     "go.opencensus.io/stats/view",

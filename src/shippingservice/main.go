@@ -23,6 +23,7 @@ import (
 
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
+	"go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -112,6 +113,22 @@ func (s *server) ShipOrder(ctx context.Context, in *pb.ShipOrderRequest) (*pb.Sh
 	}, nil
 }
 
+func initJaegerTracing() {
+
+	// Register the Jaeger exporter to be able to retrieve
+	// the collected spans.
+	exporter, err := jaeger.NewExporter(jaeger.Options{
+		Endpoint: "http://jaeger:14268",
+		Process: jaeger.Process{
+			ServiceName: "frontend",
+		},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	trace.RegisterExporter(exporter)
+}
+
 func initStats(exporter *stackdriver.Exporter) {
 	view.RegisterExporter(exporter)
 	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
@@ -122,6 +139,14 @@ func initStats(exporter *stackdriver.Exporter) {
 }
 
 func initTracing() {
+	// This is a demo app with low QPS. trace.AlwaysSample() is used here
+	// to make sure traces are available of observation and analysis.
+	// In a production environment or high QPS setup please use
+	// trace.ProbabilitySampler set at the desired probability.
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+
+	initJaegerTracing()
+
 	// TODO(ahmetb) this method is duplicated in other microservices using Go
 	// since they are not sharing packages.
 	for i := 1; i <= 3; i++ {
