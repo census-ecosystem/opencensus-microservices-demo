@@ -25,17 +25,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f5961cd4f136ee9f3a80ca62a05ecc4fb60107d6a323ae258a1c732b76861809"
-  name = "github.com/GoogleCloudPlatform/microservices-demo"
-  packages = [
-    "src/checkoutservice/genproto",
-    "src/checkoutservice/money",
-  ]
-  pruneopts = "UT"
-  revision = "34f8fb18aa3a72c63e5c43780f27bc8ed1ad9748"
-
-[[projects]]
-  branch = "master"
   digest = "1:d6afaeed1502aa28e80a4ed0981d570ad91b2579193404256ce672ed0a609e0d"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
@@ -332,8 +321,6 @@
   input-imports = [
     "cloud.google.com/go/profiler",
     "contrib.go.opencensus.io/exporter/stackdriver",
-    "github.com/GoogleCloudPlatform/microservices-demo/src/checkoutservice/genproto",
-    "github.com/GoogleCloudPlatform/microservices-demo/src/checkoutservice/money",
     "github.com/golang/protobuf/proto",
     "github.com/google/uuid",
     "go.opencensus.io/exporter/prometheus",

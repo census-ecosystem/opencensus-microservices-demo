@@ -146,7 +146,6 @@ func initTracing() {
 			trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 			log.Print("registered stackdriver tracing")
 
-			// Register the views to collect server stats.
 			stackdriverExporter = exporter
 			return
 		}

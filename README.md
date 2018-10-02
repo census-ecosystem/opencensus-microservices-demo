@@ -64,8 +64,8 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
   job that creates realistic usage patterns on the website using
   [Locust](https://locust.io/) load generator.
 - **[Prometheus](https://prometheus.io/)/[Grafana](https://grafana.com/) APM:** Frontend(Go)
-  and AdService(Java) are instrumented to export metrics to Prometheus. Grafana service is
-  pre-configured with a Dashboard to show OpenCensus metrics.
+  and AdService(Java) are instrumented to export metrics to Prometheus. Grafana service scraps
+  metrics data from Prometheus and is pre-configured with a Dashboard to show OpenCensus metrics.
 
 
 ## Installation
