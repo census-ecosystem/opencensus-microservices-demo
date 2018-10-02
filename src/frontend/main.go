@@ -26,6 +26,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"go.opencensus.io/exporter/prometheus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
@@ -79,6 +80,8 @@ type frontendServer struct {
 	adSvcConn *grpc.ClientConn
 }
 
+var stackdriverExporter view.Exporter
+
 func main() {
 	ctx := context.Background()
 	log := logrus.New()
@@ -86,7 +89,10 @@ func main() {
 	log.Formatter = &logrus.TextFormatter{}
 
 	go initProfiling(log, "frontend", "1.0.0")
-	go initTracing(log)
+	go func (log logrus.FieldLogger) {
+		initTracing(log)
+		initStats(log)
+	}(log)
 
 	srvPort := port
 	if os.Getenv("PORT") != "" {
@@ -134,17 +140,51 @@ func main() {
 	log.Fatal(http.ListenAndServe(addr+":"+srvPort, handler))
 }
 
-func initStats(log logrus.FieldLogger, exporter *stackdriver.Exporter) {
+func initPrometheusStatsExporter(log logrus.FieldLogger) *prometheus.Exporter {
+	exporter, err := prometheus.NewExporter(prometheus.Options{})
+
+	if err != nil {
+		log.Fatal("error registering prometheus exporter")
+		return nil
+	}
+
 	view.RegisterExporter(exporter)
+	return exporter
+}
+func startPrometheusExporter(log logrus.FieldLogger, exporter *prometheus.Exporter) {
+	addr := ":9090"
+	log.Infof("starting prometheus server at %s", addr)
+	http.Handle("/metrics", exporter)
+	log.Fatal(http.ListenAndServe(addr, nil))
+}
+
+func initStackDriverStatsExporter(log logrus.FieldLogger) {
+	// Reuse stactdriver exporter for stats if one is already created for tracing.
+	if stackdriverExporter == nil {
+		var err error
+		stackdriverExporter, err = stackdriver.NewExporter(stackdriver.Options{})
+		if err != nil {
+			log.Warn("error creating stackdriver exporter");
+			return
+		}
+	}
+	view.RegisterExporter(stackdriverExporter)
+}
+
+func initStats(log logrus.FieldLogger) {
+	log.Infof("init stats")
+
+	initStackDriverStatsExporter(log)
+
+	// Start prometheus exporter as well
+	exporter := initPrometheusStatsExporter(log)
+	go startPrometheusExporter(log, exporter)
+
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
-		log.Warn("Error registering http default server views")
-	} else {
-		log.Info("Registered http default server views")
+		log.Fatal("error registering default http server views")
 	}
 	if err := view.Register(ocgrpc.DefaultClientViews...); err != nil {
-		log.Warn("Error registering grpc default client views")
-	} else {
-		log.Info("Registered grpc default client views")
+		log.Fatal("error registering default grpc client views")
 	}
 }
 
@@ -158,11 +198,13 @@ func initTracing(log logrus.FieldLogger) {
 			log.Warnf("failed to initialize stackdriver exporter: %+v", err)
 		} else {
 			trace.RegisterExporter(exporter)
+			// This is demo app, hence AlwaysSample() is used to see the traces
+			// right away. Please use appropriate Sample function for your
+			// production code where QPS is high.
 			trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 			log.Info("registered stackdriver tracing")
 
-			// Register the views to collect server stats.
-			initStats(log, exporter)
+			stackdriverExporter = exporter
 			return
 		}
 		d := time.Second * 20 * time.Duration(i)

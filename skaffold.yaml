@@ -40,6 +40,10 @@ build:
     workspace: src/loadgenerator
   - imageName: gcr.io/microservices-demo-app/adservice
     workspace: src/adservice
+  - imageName: gcr.io/microservices-demo-app/grafana
+    workspace: src/grafana
+  - imageName: gcr.io/microservices-demo-app/prometheus
+    workspace: src/prometheus
 deploy:
   kubectl:
     manifests:

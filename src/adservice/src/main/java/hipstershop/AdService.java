@@ -41,6 +41,7 @@ import io.opencensus.trace.SpanBuilder;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.samplers.Samplers;
+import io.prometheus.client.exporter.HTTPServer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,6 +233,7 @@ public class AdService {
 
     // Register Prometheus exporters and export metrics to a Prometheus HTTPServer.
     PrometheusStatsCollector.createAndRegister();
+    HTTPServer prometheusServer = new HTTPServer(9090, true);
 
     // Start the RPC server. You shouldn't see any output from gRPC before this.
     logger.info("AdService starting.");
