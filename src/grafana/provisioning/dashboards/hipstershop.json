@@ -751,19 +751,6 @@
       "yBucketSize": null
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 38
-      },
-      "id": 12,
-      "panels": [],
-      "title": "Response Status",
-      "type": "row"
-    },
-    {
       "aliasColors": {},
       "bars": true,
       "dashLength": 10,
@@ -771,10 +758,10 @@
       "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
-        "h": 9,
-        "w": 23,
+        "h": 10,
+        "w": 12,
         "x": 0,
-        "y": 39
+        "y": 38
       },
       "id": 6,
       "legend": {
@@ -811,7 +798,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Number of Request by Status",
+      "title": "Number of Response by Status",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -847,6 +834,119 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 28,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Response-frontend",
+          "yaxis": 2
+        },
+        {
+          "alias": "Request-frontend",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "rate(opencensus_io_http_server_request_bytes_sum[5m])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Request-{{job}}",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(opencensus_io_http_server_response_bytes_sum[5m])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Response-{{job}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Request and Response BW",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Request bytes/sec",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": "Response bytes/sec",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": true,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Response Status",
+      "type": "row"
     }
   ],
   "refresh": false,
