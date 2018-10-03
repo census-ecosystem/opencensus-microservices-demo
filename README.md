@@ -66,6 +66,8 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 - **[Prometheus](https://prometheus.io/)/[Grafana](https://grafana.com/) APM:** Frontend(Go)
   and AdService(Java) are instrumented to export metrics to Prometheus. Grafana service scraps
   metrics data from Prometheus and is pre-configured with a Dashboard to show OpenCensus metrics.
+- **[Jaeger](https://www.jaegertracing.io/):** Jaeger collects OpenCensus traces exported by
+  microservices. This traces are presented on Jaeger UI.
 
 
 ## Installation
@@ -95,8 +97,12 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 1. Run `kubectl get pods` to verify the Pods are ready and running. The
    application frontend should be available at http://localhost:80 on your
    machine.
+
 1. Check Grafana at http://localhost:3000/ to view pre-configured Dashboard.
    username/password is admin/admin
+
+1. Check Jaeger UI at http://localhost:16686 to view traces collected by Jaeger.
+
 
 ### Option 2: Running on Google Kubernetes Engine (GKE)
 

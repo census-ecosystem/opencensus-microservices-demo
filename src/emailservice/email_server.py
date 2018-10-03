@@ -50,6 +50,24 @@ from grpc_health.v1 import health_pb2_grpc
 # except:
 #     pass
 
+# Add Jaeger tracing when following fix is released.
+# fix - https://github.com/census-instrumentation/opencensus-python/commit/890c19e6dc099f5674b2ee105a6c0a9ca5e81b79
+#
+# from opencensus.trace.ext.grpc import server_interceptor
+# from opencensus.trace.samplers import always_on
+# from opencensus.trace.exporters import jaeger_exporter
+#
+# try:
+#     sampler = always_on.AlwaysOnSampler()
+#     exporter = jaeger_exporter.JaegerExporter()
+#     exporter = jaeger_exporter.JaegerExporter(
+#         service_name="emailservice",
+#         agent_host_name="jaeger"
+#     )
+#     tracer_interceptor = server_interceptor.OpenCensusServerInterceptor(sampler, exporter)
+# except:
+#     tracer_interceptor = server_interceptor.OpenCensusServerInterceptor()
+
 # Loads confirmation email template from file
 env = Environment(
     loader=FileSystemLoader('templates'),

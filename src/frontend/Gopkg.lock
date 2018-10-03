@@ -16,26 +16,21 @@
   version = "v0.27.0"
 
 [[projects]]
-  digest = "1:9fe70def8f0ceb3d455a0acad9dadd6632287cdbf9c8c2ea50e8dabe2ade40c4"
+  digest = "1:4b96dcd8534bc6450a922bd16a76360ba3381f0d1daf40abbaec91c053fbfeb5"
   name = "contrib.go.opencensus.io/exporter/stackdriver"
-  packages = [
-    ".",
-    "propagation",
-  ]
+  packages = ["."]
   pruneopts = "UT"
   revision = "37aa2801fbf0205003e15636096ebf0373510288"
   version = "v0.5.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:3ef905a7059a17712b7b27315692992f84f356e828d38f6ff0624e04103ec675"
-  name = "github.com/GoogleCloudPlatform/microservices-demo"
-  packages = [
-    "src/frontend/genproto",
-    "src/frontend/money",
-  ]
+  digest = "1:e95de5c830369d6592224de57a31cd87a2ba1cec2abaf050d06a63ee8f7babd8"
+  name = "git.apache.org/thrift.git"
+  packages = ["lib/go/thrift"]
   pruneopts = "UT"
-  revision = "ab601665d17cf697ef79b5e00b88d21ca4860b81"
+  revision = "014f53f6582fbae8146ae291d471382016091a06"
+  source = "github.com/apache/thrift"
 
 [[projects]]
   branch = "master"
@@ -69,7 +64,7 @@
   name = "github.com/google/pprof"
   packages = ["profile"]
   pruneopts = "UT"
-  revision = "7dadf64105bba38bab598048e7721cc9d34f7e75"
+  revision = "782e5fd74720effda64d76da82067cf2b8d22a0d"
 
 [[projects]]
   digest = "1:3a26588bc48b96825977c1b3df964f8fd842cd6860cc26370588d3563433cf11"
@@ -102,6 +97,14 @@
   pruneopts = "UT"
   revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
   version = "v1.6.2"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f44d34fda864bed6d6c71514cd40b2ee097e6e67f745d5d014113e1faa5af8b7"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b729f2633dfe35f4d1d8a32385f6685610ce1cb5"
 
 [[projects]]
   digest = "1:ff5ebae34cfbf047d505ee150de27e60570e8c394b3b8fdbb720ff6ac71985fc"
@@ -164,18 +167,20 @@
   revision = "418d78d0b9a7b7de3a6bbc8a23def624cc977bb2"
 
 [[projects]]
-  digest = "1:d867dfa6751c8d7a435821ad3b736310c2ed68945d05b50fb9d23aee0540c8cc"
+  digest = "1:dc2d85c13ac22c22a1f3170a41a8e1b897fa05134aaf533f16df44f66a25b4a1"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3e01752db0189b9157070a0e1668a620f9a85da2"
-  version = "v1.0.6"
+  revision = "a67f783a3814b8729bd2dac5780b5f78f8dbd64d"
+  version = "v1.1.0"
 
 [[projects]]
-  digest = "0:"
+  digest = "1:cf149db5969de96f9f830598993f3e5e08b1222308cd0b9f018db3f412a47775"
   name = "go.opencensus.io"
   packages = [
     ".",
+    "exporter/jaeger",
+    "exporter/jaeger/internal/gen-go/jaeger",
     "exporter/prometheus",
     "internal",
     "internal/tagencoding",
@@ -201,11 +206,11 @@
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
   pruneopts = "UT"
-  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
+  revision = "e3636079e1a4c1f337f212cc5cd2aca108f6c900"
 
 [[projects]]
   branch = "master"
-  digest = "1:1c14517b2f106c61d75006199b46a46576058661d469658cb0f90739919641d2"
+  digest = "1:1ae047ded1ddcbe0eca8b0772e3ff2c10e354db4c42c65b96d0386883e63904d"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -218,7 +223,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "2f5d2388922f370f4355f327fcf4cfe9f5583908"
+  revision = "4dfa2610cdf3b287375bbba5b8f2a14d3b01d8de"
 
 [[projects]]
   branch = "master"
@@ -244,14 +249,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:75cb7164c3c9e028922e69b10842159549ab96ffc4800ea189c4a6865dc3bc08"
+  digest = "1:6f82ed211591ecb407897ca46ff6149d618223088aecad72675804f106033629"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "90868a75fefd03942536221d7c0e2f84ec62a668"
+  revision = "e4b3c5e9061176387e7cea65e4dc5853801f3fb7"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -278,7 +283,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1c282e477c97e1be16f3cd5962a041073969cee2711aa8c0b8188a25727c0e39"
+  digest = "1:6d4885456699502ca2444db0a4420096ed941788bcb28e3a80c1df6b5ebbeab9"
   name = "google.golang.org/api"
   packages = [
     "googleapi/transport",
@@ -289,9 +294,10 @@
     "transport",
     "transport/grpc",
     "transport/http",
+    "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "920bb1beccf73147754c5567fce5b1f32cd3030f"
+  revision = "5da02d31af7d15cc65a207f8a46a6e3c50d41178"
 
 [[projects]]
   digest = "1:650bc4e9ea9194737cea5950a0a1593cfa723ae29c0d0f4ef8f173cb2a4de35a"
@@ -316,7 +322,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1258fbd42d29fa24e3d930a98f9c128394020af99f7277ec38b07c028aa16c42"
+  digest = "1:2fa5dff746e504c5ea56c545d5f7f866938a8fcad252eec6b7ba4dd3ef43dfc0"
   name = "google.golang.org/genproto"
   packages = [
     "googleapis/api/annotations",
@@ -332,7 +338,7 @@
     "protobuf/field_mask",
   ]
   pruneopts = "UT"
-  revision = "221a8d4f74948678f06caaa13c9d41d22e069ae8"
+  revision = "c7e5094acea1ca1b899e2259d80a6b0f882f81f8"
 
 [[projects]]
   digest = "1:4ad047d772a7d4841687df9534a767a9e243885ed6d7d2ced6af5995a5dc44b3"
@@ -376,13 +382,12 @@
   input-imports = [
     "cloud.google.com/go/profiler",
     "contrib.go.opencensus.io/exporter/stackdriver",
-    "github.com/GoogleCloudPlatform/microservices-demo/src/frontend/genproto",
-    "github.com/GoogleCloudPlatform/microservices-demo/src/frontend/money",
     "github.com/golang/protobuf/proto",
     "github.com/google/uuid",
     "github.com/gorilla/mux",
     "github.com/pkg/errors",
     "github.com/sirupsen/logrus",
+    "go.opencensus.io/exporter/jaeger",
     "go.opencensus.io/exporter/prometheus",
     "go.opencensus.io/plugin/ocgrpc",
     "go.opencensus.io/plugin/ochttp",

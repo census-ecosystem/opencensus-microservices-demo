@@ -1,0 +1,3 @@
+FROM jaegertracing/all-in-one:1.6
+
+EXPOSE 5775 6831 6832 5778 16686 14268 9411
