@@ -207,7 +207,7 @@ func initStats(log logrus.FieldLogger) {
 
 func initTracing(log logrus.FieldLogger) {
 	// This is a demo app with low QPS. trace.AlwaysSample() is used here
-	// to make sure traces are available of observation and analysis.
+	// to make sure traces are available for observation and analysis.
 	// In a production environment or high QPS setup please use
 	// trace.ProbabilitySampler set at the desired probability.
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
