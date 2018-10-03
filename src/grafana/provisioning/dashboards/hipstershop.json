@@ -815,7 +815,7 @@
       "yaxes": [
         {
           "format": "short",
-          "label": "# of request / sec",
+          "label": "# of response / sec",
           "logBase": 1,
           "max": null,
           "min": null,
