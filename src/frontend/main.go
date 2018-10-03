@@ -109,13 +109,13 @@ func main() {
 	mustMapEnv(&svc.shippingSvcAddr, "SHIPPING_SERVICE_ADDR")
 	mustMapEnv(&svc.adSvcAddr, "AD_SERVICE_ADDR")
 
-	mustConnGRPC(ctx, &svc.currencySvcConn, svc.currencySvcAddr)
-	mustConnGRPC(ctx, &svc.productCatalogSvcConn, svc.productCatalogSvcAddr)
-	mustConnGRPC(ctx, &svc.cartSvcConn, svc.cartSvcAddr)
-	mustConnGRPC(ctx, &svc.recommendationSvcConn, svc.recommendationSvcAddr)
-	mustConnGRPC(ctx, &svc.shippingSvcConn, svc.shippingSvcAddr)
-	mustConnGRPC(ctx, &svc.checkoutSvcConn, svc.checkoutSvcAddr)
-	mustConnGRPC(ctx, &svc.adSvcConn, svc.adSvcAddr)
+	svc.currencySvcConn = mustConnGRPC(ctx, svc.currencySvcAddr)
+	svc.productCatalogSvcConn = mustConnGRPC(ctx, svc.productCatalogSvcAddr)
+	svc.cartSvcConn = mustConnGRPC(ctx, svc.cartSvcAddr)
+	svc.recommendationSvcConn = mustConnGRPC(ctx, svc.recommendationSvcAddr)
+	svc.shippingSvcConn = mustConnGRPC(ctx, svc.shippingSvcAddr)
+	svc.checkoutSvcConn = mustConnGRPC(ctx, svc.checkoutSvcAddr)
+	svc.adSvcConn = mustConnGRPC(ctx, svc.adSvcAddr)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", svc.homeHandler).Methods(http.MethodGet, http.MethodHead)
@@ -181,6 +181,9 @@ func initStackDriverStatsExporter(log logrus.FieldLogger) {
 		var err error
 		stackdriverExporter, err = stackdriver.NewExporter(stackdriver.Options{})
 		if err != nil {
+			// log.Warn is used since there are multiple backends (stackdriver & prometheus)
+			// to store the metrics. In production setup most likely you would only one backend.
+			// In that case you should use log.Fatal.
 			log.Warn("error creating stackdriver exporter");
 			return
 		}
@@ -220,6 +223,9 @@ func initTracing(log logrus.FieldLogger) {
 		log = log.WithField("retry", i)
 		exporter, err := stackdriver.NewExporter(stackdriver.Options{})
 		if err != nil {
+			// log.Warnf is used since there are multiple backends (stackdriver & jaeger)
+			// to store the traces. In production setup most likely you would only one backend.
+			// In that case you should use log.Fatalf.
 			log.Warnf("failed to initialize stackdriver exporter: %+v", err)
 		} else {
 			trace.RegisterExporter(exporter)
@@ -266,13 +272,14 @@ func mustMapEnv(target *string, envKey string) {
 	*target = v
 }
 
-func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
-	var err error
-	*conn, err = grpc.DialContext(ctx, addr,
+func mustConnGRPC(ctx context.Context, addr string) *grpc.ClientConn {
+	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
+	defer cancel()
+	conn, err := grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
-		grpc.WithTimeout(time.Second*3),
 		grpc.WithStatsHandler(&ocgrpc.ClientHandler{}))
 	if err != nil {
 		panic(errors.Wrapf(err, "grpc: failed to connect %s", addr))
 	}
+	return conn
 }
