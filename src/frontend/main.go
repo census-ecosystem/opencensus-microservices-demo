@@ -182,7 +182,7 @@ func initStackDriverStatsExporter(log logrus.FieldLogger) {
 		stackdriverExporter, err = stackdriver.NewExporter(stackdriver.Options{})
 		if err != nil {
 			// log.Warn is used since there are multiple backends (stackdriver & prometheus)
-			// to store the metrics. In production setup most likely you would only one backend.
+			// to store the metrics. In production setup most likely you would use only one backend.
 			// In that case you should use log.Fatal.
 			log.Warn("error creating stackdriver exporter");
 			return
@@ -224,7 +224,7 @@ func initTracing(log logrus.FieldLogger) {
 		exporter, err := stackdriver.NewExporter(stackdriver.Options{})
 		if err != nil {
 			// log.Warnf is used since there are multiple backends (stackdriver & jaeger)
-			// to store the traces. In production setup most likely you would only one backend.
+			// to store the traces. In production setup most likely you would use only one backend.
 			// In that case you should use log.Fatalf.
 			log.Warnf("failed to initialize stackdriver exporter: %+v", err)
 		} else {
@@ -273,8 +273,6 @@ func mustMapEnv(target *string, envKey string) {
 }
 
 func mustConnGRPC(ctx context.Context, addr string) *grpc.ClientConn {
-	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
-	defer cancel()
 	conn, err := grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
 		grpc.WithStatsHandler(&ocgrpc.ClientHandler{}))
