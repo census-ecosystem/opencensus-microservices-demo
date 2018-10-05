@@ -186,11 +186,6 @@ public class AdService {
   public static void initStackdriver() {
     logger.info("Initialize StackDriver");
 
-    // Registers all RPC views.
-    RpcViews.registerAllViews();
-
-    // Registers logging trace exporter.
-    LoggingTraceExporter.register();
     long sleepTime = 10; /* seconds */
     int maxAttempts = 3;
 
@@ -225,6 +220,12 @@ public class AdService {
     // Add final keyword to pass checkStyle.
 
     initializeAds();
+
+    // Registers all RPC views.
+    RpcViews.registerAllViews();
+
+    // Registers logging trace exporter.
+    LoggingTraceExporter.register();
 
     new Thread( new Runnable() {
       public void run(){
