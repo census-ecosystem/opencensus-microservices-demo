@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: prometheus
-        image: gcr.io/microservices-demo-app/prometheus
+        image: gcr.io/opencensus-microservices-demo/prometheus
         ports:
         - containerPort: 9090
         readinessProbe:
