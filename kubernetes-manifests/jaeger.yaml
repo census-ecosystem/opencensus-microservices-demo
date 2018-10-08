@@ -55,7 +55,7 @@ spec:
           tcpSocket:
             port: 16686
         env:
-        - name: COLLECTOR_ZIPKIN_HTT_PORT
+        - name: COLLECTOR_ZIPKIN_HTTP_PORT
           value: "9411"
         volumeMounts:
         - mountPath: /data
@@ -83,7 +83,7 @@ spec:
   - name: zipkin
     port: 9411
     targetPort: 9411
-  - name: zipking-thrift
+  - name: zipkin-thrift
     port: 5775
     targetPort: 5775
     protocol: UDP
