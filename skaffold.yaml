@@ -44,6 +44,8 @@ build:
     workspace: src/grafana
   - imageName: gcr.io/microservices-demo-app/prometheus
     workspace: src/prometheus
+  - imageName: gcr.io/microservices-demo-app/jaeger
+    workspace: src/jaeger
 deploy:
   kubectl:
     manifests:
