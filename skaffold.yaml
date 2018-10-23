@@ -12,40 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v1alpha2
+apiVersion: skaffold/v1alpha4
 kind: Config
 build:
+  artifacts:
+  - image: gcr.io/opencensus-microservices-demo/emailservice
+    context: src/emailservice
+  - image: gcr.io/opencensus-microservices-demo/productcatalogservice
+    context: src/productcatalogservice
+  - image: gcr.io/opencensus-microservices-demo/recommendationservice
+    context: src/recommendationservice
+  - image: gcr.io/opencensus-microservices-demo/shippingservice
+    context: src/shippingservice
+  - image: gcr.io/opencensus-microservices-demo/checkoutservice
+    context: src/checkoutservice
+  - image: gcr.io/opencensus-microservices-demo/paymentservice
+    context: src/paymentservice
+  - image: gcr.io/opencensus-microservices-demo/currencyservice
+    context: src/currencyservice
+  - image: gcr.io/opencensus-microservices-demo/cartservice
+    context: src/cartservice
+  - image: gcr.io/opencensus-microservices-demo/frontend
+    context: src/frontend
+  - image: gcr.io/opencensus-microservices-demo/loadgenerator
+    context: src/loadgenerator
+  - image: gcr.io/opencensus-microservices-demo/adservice
+    context: src/adservice
+  - image: gcr.io/opencensus-microservices-demo/grafana
+    context: src/grafana
+  - image: gcr.io/opencensus-microservices-demo/prometheus
+    context: src/prometheus
+  - image: gcr.io/opencensus-microservices-demo/jaeger
+    context: src/jaeger
   tagPolicy:
     gitCommit: {}
-  artifacts:
-  - imageName: gcr.io/opencensus-microservices-demo/emailservice
-    workspace: src/emailservice
-  - imageName: gcr.io/opencensus-microservices-demo/productcatalogservice
-    workspace: src/productcatalogservice
-  - imageName: gcr.io/opencensus-microservices-demo/recommendationservice
-    workspace: src/recommendationservice
-  - imageName: gcr.io/opencensus-microservices-demo/shippingservice
-    workspace: src/shippingservice
-  - imageName: gcr.io/opencensus-microservices-demo/checkoutservice
-    workspace: src/checkoutservice
-  - imageName: gcr.io/opencensus-microservices-demo/paymentservice
-    workspace: src/paymentservice
-  - imageName: gcr.io/opencensus-microservices-demo/currencyservice
-    workspace: src/currencyservice
-  - imageName: gcr.io/opencensus-microservices-demo/cartservice
-    workspace: src/cartservice
-  - imageName: gcr.io/opencensus-microservices-demo/frontend
-    workspace: src/frontend
-  - imageName: gcr.io/opencensus-microservices-demo/loadgenerator
-    workspace: src/loadgenerator
-  - imageName: gcr.io/opencensus-microservices-demo/adservice
-    workspace: src/adservice
-  - imageName: gcr.io/opencensus-microservices-demo/grafana
-    workspace: src/grafana
-  - imageName: gcr.io/opencensus-microservices-demo/prometheus
-    workspace: src/prometheus
-  - imageName: gcr.io/opencensus-microservices-demo/jaeger
-    workspace: src/jaeger
 deploy:
   kubectl:
     manifests:
@@ -58,7 +58,7 @@ profiles:
   - name: travis-ci
     build:
       local:
-        skipPush: true
+        push: false
   # "gcb" profile allows building and pushing the images
   # on Google Container Builder without requiring docker
   # installed on the developer machine. However, note that
@@ -71,4 +71,4 @@ profiles:
     build:
       googleCloudBuild:
         diskSizeGb: 300
-        machineType: "N1_HIGHCPU_32"
+        machineType: N1_HIGHCPU_32
