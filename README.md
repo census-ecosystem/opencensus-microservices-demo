@@ -1,9 +1,8 @@
 # Hipster Shop: Cloud-Native Microservices Demo Application
 
 This project is forked from
-microservices-demo [https://github.com/GoogleCloudPlatform/microservices-demo]
-at commit id ab601665d17cf697ef79b5e00b88d21ca4860b81
-[https://github.com/GoogleCloudPlatform/microservices-demo/commit/ab601665d17cf697ef79b5e00b88d21ca4860b81]
+[microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo)
+at commit id [ab601665d17cf697ef79b5e00b88d21ca4860b81](https://github.com/GoogleCloudPlatform/microservices-demo/commit/ab601665d17cf697ef79b5e00b88d21ca4860b81).
 
 The purpose of this project is to demonstrate OpenCensus tracing and monitoring
 capabilities.
