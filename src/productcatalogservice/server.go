@@ -178,9 +178,13 @@ func (p *productCatalog) ListProducts(context.Context, *pb.Empty) (*pb.ListProdu
 
 func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
 	var found *pb.Product
-	for i := 0; i < len(parseCatalog()); i++ {
-		if req.Id == parseCatalog()[i].Id {
-			found = parseCatalog()[i]
+//       for i := 0; i < len(parseCatalog()); i++ {
+//              if req.Id == parseCatalog()[i].Id {
+//                      found = parseCatalog()[i]
+	products := parseCatalog()
+	for i := 0; i < len(products); i++ {
+		if req.Id == products[i].Id {
+			found = products[i]
 		}
 	}
 	if found == nil {

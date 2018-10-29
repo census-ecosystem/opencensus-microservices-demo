@@ -36,14 +36,30 @@ import io.opencensus.exporter.stats.stackdriver.StackdriverStatsExporter;
 import io.opencensus.exporter.trace.jaeger.JaegerTraceExporter;
 import io.opencensus.exporter.trace.stackdriver.StackdriverTraceConfiguration;
 import io.opencensus.exporter.trace.stackdriver.StackdriverTraceExporter;
+import io.opencensus.stats.Aggregation;
+import io.opencensus.stats.BucketBoundaries;
+import io.opencensus.stats.Measure.MeasureLong;
+import io.opencensus.stats.Stats;
+import io.opencensus.stats.StatsRecorder;
+import io.opencensus.stats.View;
+import io.opencensus.tags.TagContextBuilder;
+import io.opencensus.tags.TagKey;
+import io.opencensus.tags.TagValue;
+import io.opencensus.tags.Tagger;
+import io.opencensus.tags.Tags;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanBuilder;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.samplers.Samplers;
+import io.opencensus.stats.View;
+import io.opencensus.stats.ViewData;
+import io.opencensus.stats.ViewManager;
 import io.prometheus.client.exporter.HTTPServer;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +76,43 @@ public class AdService {
   private int MAX_ADS_TO_SERVE = 2;
   private Server server;
   private HealthStatusManager healthMgr;
+
+  private static final Tagger tagger = Tags.getTagger();
+  private static final ViewManager viewManager = Stats.getViewManager();
+  private static final StatsRecorder statsRecorder = Stats.getStatsRecorder();
+
+  private static final String WITH_CONTEXT = "with_context";
+  private static final String WITHOUT_CONTEXT = "without_context";
+
+  // context_key allows us to break down the recorded data.
+  private static final TagKey CONTEXT_KEY = TagKey.create("context");
+
+  // videoSize will measure the size of processed videos.
+  private static final MeasureLong AD_SIZE =
+      MeasureLong.create("hipstershop/measure/ad_size", "size of ad served", "By");
+
+  private static final View.Name AD_SIZE_VIEW_NAME = View.Name.create("hipstershop/views/ad_size");
+  private static final View AD_SIZE_VIEW =
+      View.create(
+          AD_SIZE_VIEW_NAME,
+          "ads served size over time",
+          AD_SIZE,
+          Aggregation.Distribution.create(
+              BucketBoundaries.create(Arrays.asList(0.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0))),
+          Collections.singletonList(CONTEXT_KEY));
+
+  // Ad count will measure the size of processed videos.
+  private static final MeasureLong AD_COUNT =
+      MeasureLong.create("hipstershop/measure/ad_count", "count of ad served", "Count");
+
+  private static final View.Name AD_COUNT_VIEW_NAME = View.Name.create("hipstershop/views/ad_count");
+  private static final View AD_COUNT_VIEW =
+      View.create(
+          AD_COUNT_VIEW_NAME,
+          "ads served count over time",
+          AD_COUNT,
+          Aggregation.Sum.create(),
+          Collections.singletonList(CONTEXT_KEY));
 
   static final AdService service = new AdService();
   private void start() throws IOException {
@@ -108,7 +161,11 @@ public class AdService {
               .spanBuilderWithExplicitParent("Retrieve Ads", parentSpan)
               .setRecordEvents(true)
               .setSampler(Samplers.alwaysSample());
-      try (Scope scope = spanBuilder.startScopedSpan()) {
+      TagContextBuilder tagContextBuilder =
+          tagger.currentBuilder().put(CONTEXT_KEY,
+              req.getContextKeysCount() > 0 ? TagValue.create(WITH_CONTEXT) : TagValue.create(WITHOUT_CONTEXT));
+      try (Scope scopedTags = tagContextBuilder.buildScoped();
+           Scope scope = spanBuilder.startScopedSpan()) {
         Span span = tracer.getCurrentSpan();
         span.putAttribute("method", AttributeValue.stringAttributeValue("getAds"));
         List<Ad> ads = new ArrayList<>();
@@ -125,6 +182,7 @@ public class AdService {
             Ad ad = service.getAdsByKey(req.getContextKeys(i));
             if (ad != null) {
               ads.add(ad);
+              statsRecorder.newMeasureMap().put(AD_SIZE, ad.getText().length()).record();
             }
           }
         } else {
@@ -136,6 +194,7 @@ public class AdService {
           span.addAnnotation("No Ads found based on context. Constructing random Ads.");
           ads = service.getDefaultAds();
         }
+        statsRecorder.newMeasureMap().put(AD_COUNT, ads.size()).record();
         AdResponse reply = AdResponse.newBuilder().addAllAds(ads).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
@@ -157,7 +216,10 @@ public class AdService {
     List<Ad> ads = new ArrayList<>(MAX_ADS_TO_SERVE);
     Object[] keys = cacheMap.keySet().toArray();
     for (int i=0; i<MAX_ADS_TO_SERVE; i++) {
+      Ad ad = cacheMap.get(keys[new Random().nextInt(keys.length)]);
       ads.add(cacheMap.get(keys[new Random().nextInt(keys.length)]));
+
+      statsRecorder.newMeasureMap().put(AD_SIZE, ad.getText().length()).record();
     }
     return ads;
   }
@@ -177,9 +239,15 @@ public class AdService {
     cacheMap.put("camera", Ad.newBuilder().setRedirectUrl( "/product/2ZYFJ3GM2N")
         .setText("Film camera for sale. 50% off.").build());
     cacheMap.put("bike", Ad.newBuilder().setRedirectUrl("/product/9SIQT8TOJO")
-        .setText("City Bike for sale. 10% off.").build());
+        .setText("City Bike for sale. 10% off. Sales end today").build());
     cacheMap.put("kitchen", Ad.newBuilder().setRedirectUrl("/product/1YMWWN1N4O")
-        .setText("Home Barista kitchen kit for sale. Buy one, get second kit for free").build());
+        .setText("Home Barista kitchen kit for sale. Buy one, get second free").build());
+    cacheMap.put("photography", Ad.newBuilder().setRedirectUrl( "/product/2ZYFJ3GM2N")
+        .setText("Film camera $10 off").build());
+    cacheMap.put("cycling", Ad.newBuilder().setRedirectUrl("/product/9SIQT8TOJO")
+        .setText("City Bike for sale. 50% off of your second bike. Sales ends this weekend.").build());
+    cacheMap.put("cooking", Ad.newBuilder().setRedirectUrl("/product/1YMWWN1N4O")
+        .setText("Home Barista kitchen kit for sale. 20% off. Best offer of the year.").build());
     logger.info("Default Ads initialized");
   }
 
@@ -188,6 +256,9 @@ public class AdService {
 
     long sleepTime = 10; /* seconds */
     int maxAttempts = 3;
+
+    viewManager.registerView(AD_SIZE_VIEW);
+    viewManager.registerView(AD_COUNT_VIEW);
 
     for (int i=0; i<maxAttempts; i++) {
       try {
