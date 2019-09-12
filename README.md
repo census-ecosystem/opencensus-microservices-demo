@@ -185,27 +185,38 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 1. Create K3s Cluster 1 scaleway dev1-s instance for master
 
 	curl -sfL get.k3s.io | sh -s - --disable-agent --no-deploy servicelb 
+
 2. get token 
 
 	cat /var/lib/rancher/k3s/server/node-token
+
 3. Join Node 3 scale way dev1-s instance for worker
 	
 	curl -sfL https://get.k3s.io | K3S_URL=https://<ip master>:6443 K3S_TOKEN=<token> 
+
 4. on master 
 	
 	git clone git@github.com:bluejedi/opencensus-microservices-demo.git
+
 	cd opencensus-microservices-demo/
+
  	kubectl apply -f metallb.yaml
+
  	kubectl apply -f config.yaml
+
  	cd kubernetes-manifest
+
  	for f in ./; do kubectl apply -f ${f}; done
+
 	kubectl get pods
+
 	kubectl get service -A |grep LoadBalancer
 
 	default       frontend-external       LoadBalancer   10.43.141.212   192.168.1.241   80:32126/TCP                                                       56m
 	default       grafana-external        LoadBalancer   10.43.141.20    192.168.1.242   3000:32681/TCP                                                     56m
 	default       jaeger-external         LoadBalancer   10.43.21.80     192.168.1.243   16686:30812/TCP                                                    56m
 	kube-system   traefik                 LoadBalancer   10.43.45.99     192.168.1.240   80:31269/TCP,443:30035/TCP                                         68m
+
 5. open http://<IP Public Master>:<Port frontend-external> for frontend
 6. open http://<IP Public Master>:<Port grafana-external> for grafana
 7. open http://<IP Public Master>:<Port jaeger-external> for jaeger
