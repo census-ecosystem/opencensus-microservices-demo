@@ -219,9 +219,9 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
        kube-system   traefik                 LoadBalancer   10.43.45.99     192.168.1.240   80:31269/TCP,443:30035/TCP                                         68m
 
 
-5. open http://IP Public Master:Port frontend-external for frontend
-6. open http://IP Public Master:Port grafana-external for grafana
-7. open http://IP Public Master:Port jaeger-external for jaeger
+5. open http://&lt;IP Public Master&gt;:&lt;Port frontend-external&gt; for frontend
+6. open http://&lt;IP Public Master&gt;:&lt;Port grafana-external&gt; for grafana
+7. open http://&lt;IP Public Master&gt;:&lt;Port jaeger-external&gt; for jaeger
 
 ---
 
