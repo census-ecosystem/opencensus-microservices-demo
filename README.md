@@ -181,6 +181,17 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 
        curl -v "http://$INGRESS_HOST"
 
+### Option 3: Running on K3s Cluster
+1. Create K3s Cluster curl -sfL get.k3s.io | sh -s - --disable-agent --no-deploy servicelb 1 scaleway dev1-s instance for master
+2. get token cat /var/lib/rancher/k3s/server/node-token
+3. Join Node curl -sfL https://get.k3s.io | K3S_URL=https://<ip master>:6443 K3S_TOKEN=<token> 3 scale way dev1-s instance for worker
+4. on master git clone git@github.com:bluejedi/opencensus-microservices-demo.git
+5. cd opencensus-microservices-demo/
+6. kubectl apply -f metallb.yaml
+7. kubectl apply -f config.yaml
+8. cd kubernetes-manifest
+9. for f in ./; do kubectl apply -f ${f}; done
+
 ---
 
 This is not an official Google project.
