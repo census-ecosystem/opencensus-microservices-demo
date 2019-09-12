@@ -212,10 +212,12 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 
        kubectl get service -A |grep LoadBalancer
 
-default       frontend-external       LoadBalancer   10.43.141.212   192.168.1.241   80:32126/TCP                                                       56m
-default       grafana-external        LoadBalancer   10.43.141.20    192.168.1.242   3000:32681/TCP                                                     56m
-default       jaeger-external         LoadBalancer   10.43.21.80     192.168.1.243   16686:30812/TCP                                                    56m
-kube-system   traefik                 LoadBalancer   10.43.45.99     192.168.1.240   80:31269/TCP,443:30035/TCP                                         68m
+
+       default       frontend-external       LoadBalancer   10.43.141.212   192.168.1.241   80:32126/TCP                                                       56m
+       default       grafana-external        LoadBalancer   10.43.141.20    192.168.1.242   3000:32681/TCP                                                     56m
+       default       jaeger-external         LoadBalancer   10.43.21.80     192.168.1.243   16686:30812/TCP                                                    56m
+       kube-system   traefik                 LoadBalancer   10.43.45.99     192.168.1.240   80:31269/TCP,443:30035/TCP                                         68m
+
 
 5. open http://IP Public Master:Port frontend-external for frontend
 6. open http://IP Public Master:Port grafana-external for grafana
