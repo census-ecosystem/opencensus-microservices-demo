@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: bluejedi/adservice
+        image: bluejedi/adservice:e7ca03d
         ports:
         - containerPort: 9555
           name: adservice

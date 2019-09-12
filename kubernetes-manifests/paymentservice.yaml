@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: bluejedi/paymentservice
+        image: bluejedi/paymentservice:e7ca03d
         ports:
         - containerPort: 50051
         readinessProbe:

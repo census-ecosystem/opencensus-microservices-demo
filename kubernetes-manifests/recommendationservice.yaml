@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: bluejedi/recommendationservice
+        image: bluejedi/recommendationservice:e7ca03d
         ports:
         - containerPort: 8080
         readinessProbe:

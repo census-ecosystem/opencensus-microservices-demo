@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: jaeger
-        image: bluejedi/jaeger
+        image: bluejedi/jaeger:e7ca03d
         ports:
         - containerPort: 9411
           name: zipkin

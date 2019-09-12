@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: bluejedi/productcatalogservice
+        image: bluejedi/productcatalogservice:e7ca03d
         ports:
         - containerPort: 3550
         readinessProbe:

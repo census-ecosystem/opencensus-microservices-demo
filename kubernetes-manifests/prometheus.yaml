@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: prometheus
-        image: bluejedi/prometheus
+        image: bluejedi/prometheus:e7ca03d
         ports:
         - containerPort: 9090
         readinessProbe:

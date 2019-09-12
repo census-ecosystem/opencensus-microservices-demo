@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: bluejedi/frontend
+          image: bluejedi/frontend:e7ca03d
           ports:
           - containerPort: 8080
             name: frontend
