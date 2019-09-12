@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: jaeger
-        image: gcr.io/opencensus-microservices-demo/jaeger
+        image: bluejedi/jaeger
         ports:
         - containerPort: 9411
           name: zipkin

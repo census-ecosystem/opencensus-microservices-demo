@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/opencensus-microservices-demo/adservice
+        image: bluejedi/adservice
         ports:
         - containerPort: 9555
           name: adservice

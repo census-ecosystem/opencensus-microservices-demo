@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/opencensus-microservices-demo/productcatalogservice
+        image: bluejedi/productcatalogservice
         ports:
         - containerPort: 3550
         readinessProbe:

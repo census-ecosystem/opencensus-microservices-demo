@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: gcr.io/opencensus-microservices-demo/shippingservice
+        image: bluejedi/shippingservice
         ports:
         - containerPort: 50051
         readinessProbe:

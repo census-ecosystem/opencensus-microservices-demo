@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/opencensus-microservices-demo/currencyservice
+        image: bluejedi/currencyservice
         ports:
         - name: grpc
           containerPort: 7000
