@@ -38,7 +38,7 @@ spec:
           value: "frontend:80"
       containers:
       - name: main
-        image: gcr.io/opencensus-microservices-demo/loadgenerator
+        image: bluejedi/loadgenerator:e7ca03d
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"

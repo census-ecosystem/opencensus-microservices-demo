@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: gcr.io/opencensus-microservices-demo/grafana
+        image: bluejedi/grafana:e7ca03d
         ports:
         - containerPort: 3000
         readinessProbe:

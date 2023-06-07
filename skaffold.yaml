@@ -18,33 +18,33 @@ build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-  - imageName: gcr.io/opencensus-microservices-demo/emailservice
+  - imageName: bluejedi/emailservice
     workspace: src/emailservice
-  - imageName: gcr.io/opencensus-microservices-demo/productcatalogservice
+  - imageName: bluejedi/productcatalogservice
     workspace: src/productcatalogservice
-  - imageName: gcr.io/opencensus-microservices-demo/recommendationservice
+  - imageName: bluejedi/recommendationservice
     workspace: src/recommendationservice
-  - imageName: gcr.io/opencensus-microservices-demo/shippingservice
+  - imageName: bluejedi/shippingservice
     workspace: src/shippingservice
-  - imageName: gcr.io/opencensus-microservices-demo/checkoutservice
+  - imageName: bluejedi/checkoutservice
     workspace: src/checkoutservice
-  - imageName: gcr.io/opencensus-microservices-demo/paymentservice
+  - imageName: bluejedi/paymentservice
     workspace: src/paymentservice
-  - imageName: gcr.io/opencensus-microservices-demo/currencyservice
+  - imageName: bluejedi/currencyservice
     workspace: src/currencyservice
-  - imageName: gcr.io/opencensus-microservices-demo/cartservice
+  - imageName: bluejedi/cartservice
     workspace: src/cartservice
-  - imageName: gcr.io/opencensus-microservices-demo/frontend
+  - imageName: bluejedi/frontend
     workspace: src/frontend
-  - imageName: gcr.io/opencensus-microservices-demo/loadgenerator
+  - imageName: bluejedi/loadgenerator
     workspace: src/loadgenerator
-  - imageName: gcr.io/opencensus-microservices-demo/adservice
+  - imageName: bluejedi/adservice
     workspace: src/adservice
-  - imageName: gcr.io/opencensus-microservices-demo/grafana
+  - imageName: bluejedi/grafana
     workspace: src/grafana
-  - imageName: gcr.io/opencensus-microservices-demo/prometheus
+  - imageName: bluejedi/prometheus
     workspace: src/prometheus
-  - imageName: gcr.io/opencensus-microservices-demo/jaeger
+  - imageName: bluejedi/jaeger
     workspace: src/jaeger
 deploy:
   kubectl:
